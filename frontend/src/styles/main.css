@@ -1,0 +1,263 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========== 全局基础样式 ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+/* 文字选中颜色 */
+::selection {
+  background: rgba(99, 102, 241, 0.2);
+  color: #312e81;
+}
+
+/* ========== 自定义滚动条 ========== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ========== 无障碍：focus 可见性 ========== */
+@layer components {
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-1;
+  }
+}
+
+/* ========== 减弱动画偏好 ========== */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ========== 响应式容器 ========== */
+.container-responsive {
+  @apply mx-auto px-4 sm:px-6 lg:px-8;
+  max-width: 1400px;
+}
+
+/* ========== 导航栏 ========== */
+.navbar {
+  @apply bg-white/80 backdrop-blur-xl border-b border-gray-100/80;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+}
+
+.navbar-container {
+  @apply container-responsive py-3 flex items-center justify-between;
+}
+
+/* ========== 按钮 ========== */
+.btn-primary {
+  @apply bg-primary-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-primary-700 active:bg-primary-800 transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
+}
+
+.btn-secondary {
+  @apply bg-gray-50 text-gray-700 px-5 py-2.5 rounded-xl font-medium border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-gray-400/40 focus:ring-offset-1 cursor-pointer;
+}
+
+/* ========== 输入框 ========== */
+.input-field {
+  @apply w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-400 transition-all duration-200;
+}
+
+/* ========== 项目类型标签 ========== */
+.type-tag {
+  @apply inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded-full tracking-wide;
+}
+
+.type-brand {
+  @apply bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/60;
+}
+
+.type-traffic {
+  @apply bg-sky-50 text-sky-700 ring-1 ring-sky-200/60;
+}
+
+.type-ai_agent {
+  @apply bg-violet-50 text-violet-700 ring-1 ring-violet-200/60;
+}
+
+/* ========== 项目卡片 ========== */
+.project-card {
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100/80 transition-all duration-300 ease-out overflow-hidden cursor-pointer flex flex-col;
+}
+
+.project-card:hover {
+  @apply shadow-lg border-primary-200/60;
+  transform: translateY(-4px);
+}
+
+/* ========== 统计卡片 ========== */
+.stats-card {
+  @apply bg-gradient-to-br from-gray-50 to-white rounded-xl p-4 border border-gray-100/80;
+}
+
+.stats-value {
+  @apply text-2xl font-bold text-gray-900;
+}
+
+.stats-label {
+  @apply text-sm text-gray-500 mt-1;
+}
+
+/* ========== 页脚 ========== */
+.footer {
+  @apply bg-gray-50/80 border-t border-gray-200/60 mt-auto;
+}
+
+/* ========== 动画 ========== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.fade-in {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.fade-in-delay-1 {
+  animation: fadeInUp 0.5s ease-out 0.1s both;
+}
+
+.fade-in-delay-2 {
+  animation: fadeInUp 0.5s ease-out 0.2s both;
+}
+
+.fade-in-delay-3 {
+  animation: fadeInUp 0.5s ease-out 0.3s both;
+}
+
+/* 骨架屏加载动画 */
+.skeleton {
+  @apply bg-gray-200 rounded-xl;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* ========== 加载 & 空状态 ========== */
+.loading-container {
+  @apply flex items-center justify-center h-64;
+}
+
+.empty-state {
+  @apply flex flex-col items-center justify-center py-16 text-center;
+}
+
+.empty-state-icon {
+  @apply text-6xl text-gray-300 mb-4;
+}
+
+.empty-state-text {
+  @apply text-gray-500 text-lg;
+}
+
+/* ========== 图片/视频容器 ========== */
+.image-container {
+  @apply w-full aspect-video bg-gray-100 overflow-hidden;
+}
+
+.image-container img {
+  @apply w-full h-full object-cover transition-transform duration-500 ease-out;
+}
+
+.project-card:hover .image-container img {
+  transform: scale(1.05);
+}
+
+.video-container {
+  @apply w-full aspect-video bg-gray-900 rounded-xl overflow-hidden;
+}
+
+.video-container video {
+  @apply w-full h-full object-contain;
+}
+
+/* ========== Element Plus 覆盖 ========== */
+.el-button {
+  @apply rounded-xl;
+}
+
+.el-input__wrapper {
+  @apply rounded-xl;
+}
+
+.el-card {
+  @apply border-gray-100;
+}
+
+/* ========== z-index 管理 ========== */
+:root {
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-modal: 50;
+  --z-tooltip: 60;
+  --z-notification: 70;
+}
+
+/* ========== 响应式网格 ========== */
+.grid-responsive {
+  @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+}
