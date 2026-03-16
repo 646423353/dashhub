@@ -4,7 +4,7 @@
 
 - **运行时**: Node.js
 - **框架**: Express.js
-- **数据库**: PostgreSQL
+- **数据库**: MySQL
 - **认证**: JWT (JSON Web Token)
 - **文件上传**: Multer
 - **密码加密**: bcryptjs
@@ -38,11 +38,12 @@ npm install
 
 ## 数据库设置
 
-确保 PostgreSQL 已安装并运行：
+确保 MySQL 已安装并运行：
 
 1. 创建数据库：
 ```bash
-createdb dashhub
+# 进入 MySQL 并执行
+mysql -u root -p < schema.sql
 ```
 
 2. 更新 `.env` 文件中的数据库连接信息
@@ -252,7 +253,7 @@ relevance_score = (text_match_score * 0.4) +
 ```
 
 各组成部分：
-1. **文本匹配度 (40%)**: PostgreSQL 全文搜索
+1. **文本匹配度 (40%)**: MySQL 文本搜索
 2. **人气得分 (30%)**: 浏览量 + 点击量
 3. **活跃度得分 (20%)**: 近一周交易/分账金额
 4. **新鲜度得分 (10%)**: 项目创建时间

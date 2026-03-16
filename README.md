@@ -27,7 +27,7 @@ DashHub 允许用户创建和展示三种类型的项目：
 
 ### 后端
 - Node.js + Express
-- PostgreSQL 数据库
+- MySQL 数据库
 - JWT 身份验证
 - Multer 文件上传
 - bcryptjs 密码加密
@@ -61,7 +61,7 @@ relevance_score = (text_match_score * 0.4) +
 ```
 
 各组成部分：
-1. **文本匹配度 (40%)**: PostgreSQL 全文搜索
+1. **文本匹配度 (40%)**: MySQL 文本搜索
 2. **人气得分 (30%)**: 浏览量 + 点击量
 3. **活跃度得分 (20%)**: 近一周交易/分账金额
 4. **新鲜度得分 (10%)**: 项目创建时间
@@ -89,34 +89,6 @@ dashhub/
 │   │   ├── stores/
 │   │   ├── router/
 │   │   └── main.js
-│   └── package.json
-└── README.md
-```
-
-## 快速开始
-
-### 1. 安装 PostgreSQL
-
-确保已安装 PostgreSQL 并运行服务。
-
-### 2. 后端设置
-
-```bash
-cd backend
-
-# 安装依赖
-npm install
-
-# 创建数据库
-createdb dashhub
-
-# 初始化数据库和种子数据
-npm run seed
-
-# 启动开发服务器
-npm run dev
-```
-
 后端 API 将运行在 `http://localhost:3001`
 
 ### 3. 前端设置
