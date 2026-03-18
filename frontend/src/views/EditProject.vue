@@ -87,7 +87,7 @@
                 </div>
 
                 <div v-if="uploads.logo.url" class="upload-preview square-preview" @click="clearUpload('logo')">
-                  <img :src="uploads.logo.url.startsWith('http') ? uploads.logo.url : (serverBase + uploads.logo.url)" alt="Logo 预览" />
+                  <img :src="getAssetUrl(uploads.logo.url)" alt="Logo 预览" />
                   <div class="preview-mask"><el-icon><Delete /></el-icon></div>
                 </div>
                 <div v-else class="upload-dropzone" @click="triggerInput('logo')">
@@ -108,7 +108,7 @@
 
                 <div class="flex flex-wrap gap-3">
                   <div v-for="(item, index) in uploads.covers" :key="index" class="relative w-[140px] h-[80px] rounded-lg overflow-hidden group border border-gray-100 placeholder-loading bg-gray-50">
-                    <img v-if="item.url" :src="item.url.startsWith('http') ? item.url : (serverBase + item.url)" class="w-full h-full object-cover" />
+                    <img v-if="item.url" :src="getAssetUrl(item.url)" class="w-full h-full object-cover" />
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer" @click="removeArrayUpload('covers', index)">
                       <el-icon class="text-white text-xl"><Delete /></el-icon>
                     </div>
@@ -135,7 +135,7 @@
 
                 <div class="flex flex-wrap gap-4">
                   <div v-for="(item, index) in uploads.videos" :key="index" class="relative w-[280px] group border border-gray-100 rounded-lg overflow-hidden placeholder-loading bg-black">
-                    <video v-if="item.url" :src="item.url.startsWith('http') ? item.url : (serverBase + item.url)" class="w-full h-[150px] object-cover" />
+                    <video v-if="item.url" :src="getAssetUrl(item.url)" class="w-full h-[150px] object-cover" />
                     <div class="absolute top-2 right-2 flex items-center justify-center cursor-pointer z-10" @click="removeArrayUpload('videos', index)">
                       <el-icon class="text-white text-2xl drop-shadow-md bg-black/40 rounded-full"><CircleCloseFilled /></el-icon>
                     </div>
@@ -189,6 +189,7 @@ import Footer from '@/components/Footer.vue';
 import { Edit, Link, VideoPlay, Picture, Delete, CircleCloseFilled, Plus, Loading, Connection } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import axios from 'axios';
+import { getAssetUrl } from '@/utils/asset';
 
 const route = useRoute();
 const router = useRouter();

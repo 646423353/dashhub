@@ -6,6 +6,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import './styles/main.css';
 import App from './App.vue';
 import router from './router';
+import { getAssetUrl } from '@/utils/asset';
 
 const app = createApp(App);
 
@@ -13,6 +14,9 @@ const app = createApp(App);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);
 }
+
+// 注册全局图片路径处理
+app.config.globalProperties.$assetUrl = getAssetUrl;
 
 app.use(createPinia());
 app.use(router);

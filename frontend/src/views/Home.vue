@@ -43,7 +43,7 @@
               </div>
               <template v-if="topTotal">
                 <div class="flex items-center gap-4 mb-4">
-                  <img v-if="topTotal.logo" :src="topTotal.logo" class="w-16 h-16 rounded-xl object-cover ring-1 ring-white/10" />
+                  <img v-if="topTotal.logo" :src="$assetUrl(topTotal.logo)" class="w-16 h-16 rounded-xl object-cover ring-1 ring-white/10" />
                   <div v-else class="w-16 h-16 rounded-xl bg-gray-800 flex items-center justify-center text-white text-xl font-bold border border-white/10">{{ topTotal.name.charAt(0).toUpperCase() }}</div>
                   <div>
                     <h3 class="text-white font-bold text-lg leading-tight mb-1">{{ topTotal.name }}</h3>
@@ -78,7 +78,7 @@
               </div>
               <template v-if="topRising">
                 <div class="flex items-center gap-4 mb-4">
-                  <img v-if="topRising.logo" :src="topRising.logo" class="w-14 h-14 rounded-xl object-cover ring-1 ring-white/10" />
+                  <img v-if="topRising.logo" :src="$assetUrl(topRising.logo)" class="w-14 h-14 rounded-xl object-cover ring-1 ring-white/10" />
                   <div v-else class="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center text-white text-lg font-bold border border-white/10">{{ topRising.name.charAt(0).toUpperCase() }}</div>
                   <div>
                     <h3 class="text-white font-bold text-base leading-tight mb-1">{{ topRising.name }}</h3>

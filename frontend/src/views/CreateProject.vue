@@ -138,7 +138,7 @@
 
             <div class="flex flex-wrap gap-4">
               <div v-for="(item, index) in uploads.videos" :key="index" class="relative w-[280px] group border border-gray-100 rounded-lg overflow-hidden placeholder-loading bg-black">
-                <video v-if="item.url" :src="serverBase + item.url" controls class="w-full h-[150px] object-cover" />
+                <video v-if="item.url" :src="getAssetUrl(item.url)" controls class="w-full h-[150px] object-cover" />
                 <div v-if="item.progress >= 100" class="absolute top-2 right-2 flex items-center justify-center cursor-pointer z-10" @click="removeArrayUpload('videos', index)">
                   <el-icon class="text-white text-2xl drop-shadow-md"><CircleCloseFilled /></el-icon>
                 </div>
@@ -225,6 +225,7 @@ import Footer from '@/components/Footer.vue';
 import { Edit, Link, Upload, VideoPlay, Picture, Delete, CircleCloseFilled, Plus, Connection } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
+import { getAssetUrl } from '@/utils/asset';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -375,7 +376,7 @@ const uploadToServer = async (file, type) => {
     });
     if (response.data?.success) {
       const serverUrl = response.data.data.logo;
-      uploads.logo.url = serverBase + serverUrl;
+      uploads.logo.url = getAssetUrl(serverUrl);
       form.logo = serverUrl;
       uploads.logo.progress = 100;
       ElMessage.success('Logo上传成功');
@@ -410,9 +411,9 @@ const uploadToServerArrayItem = async (uploadItem, type) => {
       const serverUrl = Array.isArray(serverUrls) ? serverUrls[0] : serverUrls;
 
       if (type !== 'videos') {
-        uploadItem.url = serverBase + serverUrl;
+        uploadItem.url = getAssetUrl(serverUrl);
       } else {
-        uploadItem.url = serverUrl;
+        uploadItem.url = getAssetUrl(serverUrl);
       }
       uploadItem.progress = 100;
 
@@ -471,7 +472,10 @@ const createProject = async () => {
       logo: form.logo,
       coverImage: form.coverImage,
       videoUrl: form.videoUrl,
-      disclosureProtocol: form.disclosureProtocol
+      disclosureProtocol: form.disclosureProtocol,
+      cooperationForm: form.cooperationForm,
+      useDashtro: form.useDashtro,
+      dashtroAgreement: form.dashtroAgreement
     });
     ElMessage.success('项目创建成功！');
     router.push('/my-projects');

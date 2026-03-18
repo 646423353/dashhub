@@ -72,7 +72,7 @@
             </div>
 
             <!-- Logo -->
-            <img v-if="project.logo" :src="project.logo" class="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover ring-1 ring-gray-100 shadow-sm" />
+            <img v-if="project.logo" :src="$assetUrl(project.logo)" class="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover ring-1 ring-gray-100 shadow-sm" />
             <div v-else class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl flex items-center justify-center text-white text-2xl font-bold">
               {{ project.name.charAt(0).toUpperCase() }}
             </div>

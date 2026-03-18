@@ -3,7 +3,7 @@
     <!-- 封面图片 -->
     <div class="relative overflow-hidden">
       <div v-if="project.logo" class="image-container">
-        <img :src="project.logo" :alt="project.name" />
+        <img :src="$assetUrl(project.logo)" :alt="project.name" />
       </div>
       <div v-else class="image-container flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <el-icon class="text-4xl text-gray-300"><Picture /></el-icon>
@@ -28,7 +28,7 @@
       <div class="flex items-start space-x-3">
         <img
           v-if="project.creator_avatar"
-          :src="project.creator_avatar"
+          :src="$assetUrl(project.creator_avatar)"
           :alt="project.creator_username"
           class="w-11 h-11 rounded-xl object-cover flex-shrink-0 ring-1 ring-gray-100"
         />

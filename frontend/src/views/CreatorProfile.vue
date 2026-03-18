@@ -17,7 +17,7 @@
         <!-- 创建者信息卡 -->
         <div class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8 md:p-12 mb-8 flex flex-col md:flex-row items-center md:items-start gap-8">
           <div class="flex-shrink-0">
-            <el-avatar v-if="creator.avatar" :size="100" :src="creator.avatar" class="border-2 border-gray-100 shadow-xl" />
+            <el-avatar v-if="creator.avatar" :size="100" :src="$assetUrl(creator.avatar)" class="border-2 border-gray-100 shadow-xl" />
             <div v-else class="w-24 h-24 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-xl">
               {{ creator.username?.charAt(0)?.toUpperCase() }}
             </div>
@@ -47,7 +47,7 @@
               @click="$router.push(`/project/${project.id}`)"
             >
               <div class="flex items-start gap-5">
-                <img v-if="project.logo" :src="project.logo" class="w-16 h-16 rounded-2xl object-cover ring-1 ring-gray-100 flex-shrink-0" />
+                <img v-if="project.logo" :src="$assetUrl(project.logo)" class="w-16 h-16 rounded-2xl object-cover ring-1 ring-gray-100 flex-shrink-0" />
                 <div v-else class="w-16 h-16 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
                   {{ project.name?.charAt(0)?.toUpperCase() }}
                 </div>

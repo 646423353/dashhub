@@ -19,7 +19,7 @@
           <div class="flex-shrink-0">
             <img
               v-if="project.logo"
-              :src="project.logo"
+              :src="$assetUrl(project.logo)"
               :alt="project.name"
               class="w-32 h-32 md:w-40 md:h-40 rounded-3xl object-cover ring-1 ring-gray-100 shadow-xl shadow-gray-200/50"
             />
@@ -44,7 +44,7 @@
             </h1>
             
             <div class="flex items-center justify-center md:justify-start text-gray-500 text-sm mb-6 space-x-2 cursor-pointer hover:text-primary-600 transition-colors" @click="goToCreator">
-              <el-avatar :size="28" :src="project.creator_avatar" class="border border-gray-200" />
+              <el-avatar :size="28" :src="$assetUrl(project.creator_avatar)" class="border border-gray-200" />
               <span class="font-medium text-gray-700 hover:text-primary-600 transition-colors">{{ project.creator_username }}</span>
               <el-icon class="text-gray-400"><ArrowRight /></el-icon>
             </div>
@@ -150,7 +150,7 @@
         <div v-if="project.video_url && project.video_url.length > 0" class="flex flex-col gap-6 mb-8">
           <div v-for="(vUrl, index) in project.video_url" :key="'video-'+index" class="rounded-2xl overflow-hidden bg-black/5 border border-gray-100">
             <video controls class="w-full h-auto block">
-              <source :src="serverBase + vUrl" type="video/mp4">
+              <source :src="$assetUrl(vUrl)" type="video/mp4">
               您的浏览器不支持视频播放
             </video>
           </div>
@@ -159,7 +159,7 @@
         <!-- 详情图（原封面图） -->
         <div v-if="project.cover_image && project.cover_image.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div v-for="(cUrl, index) in project.cover_image" :key="'cover-'+index" class="rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-            <img :src="cUrl.startsWith('http') ? cUrl : (serverBase + cUrl)" :alt="`${project.name} 详情图 ${index + 1}`" class="w-full h-auto block object-cover aspect-video" />
+            <img :src="$assetUrl(cUrl)" :alt="`${project.name} 详情图 ${index + 1}`" class="w-full h-auto block object-cover aspect-video" />
           </div>
         </div>
       </div>

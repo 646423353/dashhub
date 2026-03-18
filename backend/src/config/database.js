@@ -83,9 +83,9 @@ export const dbHelper = {
       return rows;
     },
     create: async (data) => {
-      const cols = Object.keys(data);
+      const cols = Object.keys(data).filter(k => data[k] !== undefined);
       const placeholders = cols.map(() => '?').join(', ');
-      const values = Object.values(data);
+      const values = cols.map(k => data[k]);
       const [result] = await pool.execute(
         `INSERT INTO projects (${cols.join(', ')}) VALUES (${placeholders})`,
         values
@@ -94,8 +94,13 @@ export const dbHelper = {
       return rows[0];
     },
     update: async (id, data) => {
-      const fields = Object.keys(data).map(k => `${k} = ?`).join(', ');
-      const values = [...Object.values(data), id];
+      const cols = Object.keys(data).filter(k => data[k] !== undefined);
+      if (cols.length === 0) {
+        const [rows] = await pool.execute('SELECT * FROM projects WHERE id = ?', [id]);
+        return rows[0] || null;
+      }
+      const fields = cols.map(k => `${k} = ?`).join(', ');
+      const values = [...cols.map(k => data[k]), id];
       await pool.execute(`UPDATE projects SET ${fields} WHERE id = ?`, values);
       const [rows] = await pool.execute('SELECT * FROM projects WHERE id = ?', [id]);
       return rows[0] || null;
