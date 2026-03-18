@@ -238,6 +238,9 @@ import axios from 'axios';
 
 const router = useRouter();
 const authStore = useAuthStore();
+
+// 服务器基础地址，线上通过 VITE_API_BASE 环境变量注入
+const serverBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
 const projectStore = useProjectStore();
 const { projectsByType, homeProjects } = storeToRefs(projectStore);
 
@@ -326,16 +329,16 @@ const formatNumber = (num) => {
 
 const fetchTopProjects = async () => {
   try {
-    const resTotal = await axios.get('http://localhost:3001/api/projects/leaderboard/total?limit=1');
+    const resTotal = await axios.get(`${serverBase}/projects/leaderboard/total?limit=1`);
     if (resTotal.data.success && resTotal.data.data.length > 0) {
       topTotal.value = resTotal.data.data[0];
     }
-    const resRising = await axios.get('http://localhost:3001/api/projects/leaderboard/rising?limit=1');
+    const resRising = await axios.get(`${serverBase}/projects/leaderboard/rising?limit=1`);
     if (resRising.data.success && resRising.data.data.length > 0) {
       topRising.value = resRising.data.data[0];
     }
   } catch (error) {
-    console.error('Failed to fetch top projects for hero section', error);
+    console.error('获取榜单顶部项目失败', error);
   }
 };
 

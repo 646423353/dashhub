@@ -150,7 +150,7 @@
         <div v-if="project.video_url && project.video_url.length > 0" class="flex flex-col gap-6 mb-8">
           <div v-for="(vUrl, index) in project.video_url" :key="'video-'+index" class="rounded-2xl overflow-hidden bg-black/5 border border-gray-100">
             <video controls class="w-full h-auto block">
-              <source :src="'http://localhost:3001' + vUrl" type="video/mp4">
+              <source :src="serverBase + vUrl" type="video/mp4">
               您的浏览器不支持视频播放
             </video>
           </div>
@@ -159,7 +159,7 @@
         <!-- 详情图（原封面图） -->
         <div v-if="project.cover_image && project.cover_image.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div v-for="(cUrl, index) in project.cover_image" :key="'cover-'+index" class="rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-            <img :src="cUrl.startsWith('http') ? cUrl : ('http://localhost:3001' + cUrl)" :alt="`${project.name} 详情图 ${index + 1}`" class="w-full h-auto block object-cover aspect-video" />
+            <img :src="cUrl.startsWith('http') ? cUrl : (serverBase + cUrl)" :alt="`${project.name} 详情图 ${index + 1}`" class="w-full h-auto block object-cover aspect-video" />
           </div>
         </div>
       </div>
@@ -199,6 +199,9 @@ const router = useRouter();
 const route = useRoute();
 const projectStore = useProjectStore();
 const authStore = useAuthStore();
+
+// 服务器基础地址，线上通过 VITE_API_BASE 环境变量注入
+const serverBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
 
 const project = ref(null);
 const loading = ref(true);

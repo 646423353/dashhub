@@ -1,6 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +17,11 @@ const storage = multer.diskStorage({
       uploadPath = path.join(uploadPath, 'images');
     } else if (file.fieldname === 'avatar') {
       uploadPath = path.join(uploadPath, 'avatars');
+    }
+
+    // 确保目录存在
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
     }
 
     cb(null, uploadPath);
