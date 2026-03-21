@@ -329,11 +329,11 @@ const formatNumber = (num) => {
 
 const fetchTopProjects = async () => {
   try {
-    const resTotal = await axios.get(`${serverBase}/projects/leaderboard/total?limit=1`);
+    const resTotal = await axios.get(`${serverBase}/api/projects/leaderboard/total?limit=1`);
     if (resTotal.data.success && resTotal.data.data.length > 0) {
       topTotal.value = resTotal.data.data[0];
     }
-    const resRising = await axios.get(`${serverBase}/projects/leaderboard/rising?limit=1`);
+    const resRising = await axios.get(`${serverBase}/api/projects/leaderboard/rising?limit=1`);
     if (resRising.data.success && resRising.data.data.length > 0) {
       topRising.value = resRising.data.data[0];
     }

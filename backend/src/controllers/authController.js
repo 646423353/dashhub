@@ -13,57 +13,52 @@ export const sendVerificationCode = async (req, res) => {
     if (!email || !type) {
       return res.status(400).json({
         success: false,
-        message: 'Email and type are required'
+        message: '请提供邮箱和验证类型'
       });
     }
 
     if (!['register', 'reset_password'].includes(type)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid type. Must be register or reset_password'
+        message: '无效的验证类型，必须是register或reset_password'
       });
     }
 
-    // Check if email already exists for registration
     if (type === 'register') {
       const existingUser = await User.findByEmail(email);
       if (existingUser) {
         return res.status(400).json({
           success: false,
-          message: 'Email already registered'
+          message: '该邮箱已被注册'
         });
       }
     }
 
-    // Check if email exists for password reset
     if (type === 'reset_password') {
       const existingUser = await User.findByEmail(email);
       if (!existingUser) {
         return res.status(400).json({
           success: false,
-          message: 'Email not found'
+          message: '该邮箱未注册'
         });
       }
     }
 
-    // Generate and save verification code
     const code = VerificationCode.generateCode();
     await VerificationCode.create({ email, code, type });
 
-    // In production, send email here
-    // For development, log the code
-    console.log(`🔐 Verification code for ${email}: ${code}`);
+    console.log(`🔐 验证码 ${email}: ${code}`);
 
     res.json({
       success: true,
-      message: 'Verification code sent',
-      code: code // Only for development, remove in production
+      message: '验证码已发送',
+      code: code
     });
   } catch (error) {
-    console.error('Send verification code error:', error);
+    console.error('发送验证码错误:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to send verification code'
+      message: '发送验证码失败'
     });
   }
 };
@@ -79,40 +74,34 @@ export const register = async (req, res) => {
     if (!email || !code || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Email, code, and password are required'
+        message: '请提供邮箱、验证码和密码'
       });
     }
 
-    // Verify code
     const verificationCode = await VerificationCode.findByEmailAndCode(email, code);
     if (!verificationCode) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid or expired verification code'
+        message: '验证码无效或已过期'
       });
     }
 
     if (verificationCode.type !== 'register') {
       return res.status(400).json({
         success: false,
-        message: 'Invalid verification code type'
+        message: '验证码类型错误'
       });
     }
 
-    // Create user
     const user = await User.create({
       email,
       password,
       username: username || email.split('@')[0]
     });
 
-    // Mark verification code as used
     await VerificationCode.markAsUsed(verificationCode.id);
-
-    // Verify email
     await User.verifyEmail(email);
 
-    // Generate JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET,
@@ -121,7 +110,7 @@ export const register = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Registration successful',
+      message: '注册成功',
       token,
       user: {
         id: user.id,
@@ -131,25 +120,20 @@ export const register = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Register error:', error);
-    // MySQL 重复邮件错误 (Duplicate entry)
+    console.error('注册错误:', error);
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({
         success: false,
-        message: 'Email already registered'
+        message: '该邮箱已被注册'
       });
     }
     res.status(500).json({
       success: false,
-      message: 'Registration failed'
+      message: '注册失败'
     });
   }
 };
 
-/**
- * 登录
- * POST /api/auth/login
- */
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -157,29 +141,26 @@ export const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Email and password are required'
+        message: '请提供邮箱和密码'
       });
     }
 
-    // Find user
     const user = await User.findByEmail(email);
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: '邮箱或密码错误'
       });
     }
 
-    // Verify password
     const isValidPassword = await User.verifyPassword(password, user.password_hash);
     if (!isValidPassword) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: '邮箱或密码错误'
       });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET,
@@ -188,7 +169,7 @@ export const login = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Login successful',
+      message: '登录成功',
       token,
       user: {
         id: user.id,
@@ -199,10 +180,10 @@ export const login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('登录错误:', error);
     res.status(500).json({
       success: false,
-      message: 'Login failed'
+      message: '登录失败'
     });
   }
 };
@@ -218,64 +199,56 @@ export const resetPassword = async (req, res) => {
     if (!email || !code || !newPassword) {
       return res.status(400).json({
         success: false,
-        message: 'Email, code, and new password are required'
+        message: '请提供邮箱、验证码和新密码'
       });
     }
 
-    // Verify code
     const verificationCode = await VerificationCode.findByEmailAndCode(email, code);
     if (!verificationCode) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid or expired verification code'
+        message: '验证码无效或已过期'
       });
     }
 
     if (verificationCode.type !== 'reset_password') {
       return res.status(400).json({
         success: false,
-        message: 'Invalid verification code type'
+        message: '验证码类型错误'
       });
     }
 
-    // Find user and update password
     const user = await User.findByEmail(email);
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: 'User not found'
+        message: '用户不存在'
       });
     }
 
     await User.updatePassword(user.id, newPassword);
-
-    // Mark verification code as used
     await VerificationCode.markAsUsed(verificationCode.id);
 
     res.json({
       success: true,
-      message: 'Password reset successful'
+      message: '密码重置成功'
     });
   } catch (error) {
-    console.error('Reset password error:', error);
+    console.error('重置密码错误:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to reset password'
+      message: '重置密码失败'
     });
   }
 };
 
-/**
- * 获取当前用户信息
- * GET /api/auth/me
- */
 export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: '用户不存在'
       });
     }
 
@@ -291,10 +264,10 @@ export const getMe = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get user error:', error);
+    console.error('获取用户信息错误:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get user information'
+      message: '获取用户信息失败'
     });
   }
 };

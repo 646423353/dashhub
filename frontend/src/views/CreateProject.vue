@@ -368,7 +368,7 @@ const uploadToServer = async (file, type) => {
   
   try {
     uploads.logo.progress = 5;
-    const response = await axios.post(`${serverBase}/upload`, formData, {
+    const response = await axios.post(`${serverBase}/api/upload`, formData, {
       headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${authStore.token}` },
       onUploadProgress: (e) => {
         if (e.total) uploads.logo.progress = Math.round((e.loaded / e.total) * 90);
@@ -397,7 +397,7 @@ const uploadToServerArrayItem = async (uploadItem, type) => {
 
   try {
     uploadItem.progress = 5;
-    const response = await axios.post(`${serverBase}/upload`, formData, {
+    const response = await axios.post(`${serverBase}/api/upload`, formData, {
       headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${authStore.token}` },
       onUploadProgress: (e) => {
         if (e.total) uploadItem.progress = Math.round((e.loaded / e.total) * 90);

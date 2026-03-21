@@ -9,6 +9,7 @@ import userRoutes from './routes/users.js';
 import projectRoutes from './routes/projects.js';
 import uploadRoutes from './routes/upload.js';
 import searchRoutes from './routes/search.js';
+import oauthRoutes from './routes/oauth.js';
 
 // Load environment variables
 dotenv.config();
@@ -20,8 +21,22 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://localhost:5176',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true);
+    }
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -49,6 +64,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/oauth', oauthRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

@@ -37,19 +37,10 @@ request.interceptors.response.use(
 
       switch (status) {
         case 401:
-          // 未授权，清除 token 并跳转登录
-          const authStore = useAuthStore();
-          authStore.logout();
-          window.location.href = '/login';
-          break;
         case 403:
-          console.error('Forbidden:', data.message);
-          break;
         case 404:
-          console.error('Not found:', data.message);
-          break;
         case 500:
-          console.error('Server error:', data.message);
+          console.error(`HTTP ${status}:`, data.message);
           break;
       }
 

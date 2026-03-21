@@ -9,6 +9,12 @@ const routes = [
     meta: { title: '首页' }
   },
   {
+    path: '/oauth/authorize',
+    name: 'OAuthAuthorize',
+    component: () => import('@/views/OAuthAuthorize.vue'),
+    meta: { title: '授权', requiresAuth: true }
+  },
+  {
     path: '/search',
     name: 'Search',
     component: () => import('@/views/Search.vue'),

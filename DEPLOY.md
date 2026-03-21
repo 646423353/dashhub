@@ -216,3 +216,148 @@ npm run dev
 | 排行榜无数据 | 运行 `node seed-stats.mjs` 注入演示数据 |
 | 前端白屏 | 生产构建后确认 Nginx 配置了 `try_files` 支持 history 路由 |
 | 验证码收不到 | 在 `.env` 配置正确的 SMTP 信息 |
+
+---
+
+## 七、OAuth 一键登录功能部署
+
+### 1. 功能概述
+
+DashHub 作为 OAuth 2.0 授权服务器，为子系统提供统一的身份认证服务。用户可以在子系统点击"一键登录"，跳转到主系统完成授权后自动登录子系统。
+
+### 2. 数据库配置
+
+执行以下 SQL 创建 OAuth 相关表：
+
+```bash
+mysql -u root -p dashhub << 'EOF'
+-- OAuth 客户端表
+CREATE TABLE IF NOT EXISTS oauth_clients (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  client_id VARCHAR(100) NOT NULL UNIQUE,
+  client_secret VARCHAR(255) NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  redirect_uris TEXT NOT NULL,
+  scopes TEXT,
+  is_active TINYINT(1) DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- OAuth 授权码表
+CREATE TABLE IF NOT EXISTS oauth_codes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  code VARCHAR(255) NOT NULL UNIQUE,
+  client_id VARCHAR(100) NOT NULL,
+  user_id INT NOT NULL,
+  redirect_uri VARCHAR(500) NOT NULL,
+  scopes TEXT,
+  expires_at TIMESTAMP NOT NULL,
+  used TINYINT(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- OAuth 令牌表
+CREATE TABLE IF NOT EXISTS oauth_tokens (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  access_token VARCHAR(255) NOT NULL UNIQUE,
+  refresh_token VARCHAR(255) NOT NULL UNIQUE,
+  client_id VARCHAR(100) NOT NULL,
+  user_id INT NOT NULL,
+  scopes TEXT,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 注册子系统客户端
+INSERT INTO oauth_clients (client_id, client_secret, name, redirect_uris, scopes)
+VALUES ('business-planner', 'bp-secret-key-2026-change-in-production', '商业策划机', 
+        '["http://localhost:5173/auth/callback"]', '["openid","profile","email"]')
+ON DUPLICATE KEY UPDATE redirect_uris = VALUES(redirect_uris);
+EOF
+```
+
+### 3. 环境变量配置
+
+在 `backend/.env` 中添加：
+
+```env
+# OAuth 配置
+OAUTH_CODE_EXPIRES=600
+OAUTH_ACCESS_TOKEN_EXPIRES=7200
+OAUTH_REFRESH_TOKEN_EXPIRES=2592000
+FRONTEND_URL=http://localhost:5174
+```
+
+### 4. CORS 配置
+
+确保 `backend/src/index.js` 中的 CORS 配置包含子系统地址：
+
+```javascript
+app.use(cors({
+  origin: [
+    'http://localhost:5174',   // 主系统前端
+    'http://localhost:5173',   // 子系统前端
+    'http://localhost:3000',   // 子系统后端
+  ],
+  credentials: true
+}));
+```
+
+### 5. 路由配置
+
+确保 `backend/src/index.js` 中已注册 OAuth 路由：
+
+```javascript
+import oauthRoutes from './routes/oauth.js';
+app.use('/oauth', oauthRoutes);
+```
+
+### 6. 前端授权页面
+
+确保前端有以下路由和页面：
+
+- `/oauth/authorize` - OAuth 授权确认页面 (`views/OAuthAuthorize.vue`)
+- `/login` - 登录页面（支持 redirect 参数）
+
+### 7. 安全注意事项
+
+| 安全项 | 说明 |
+|--------|------|
+| client_secret | 生产环境必须使用强随机字符串，不可泄露 |
+| redirect_uris | 必须严格验证，防止开放重定向攻击 |
+| state 参数 | 必须验证 state 参数，防止 CSRF 攻击 |
+| HTTPS | 生产环境必须使用 HTTPS |
+| Token 过期 | 建议设置较短的 access_token 过期时间 |
+
+### 8. 验证方法
+
+```bash
+# 测试 OAuth 授权端点
+curl -X POST "http://localhost:3001/oauth/authorize?response_type=code&client_id=business-planner&redirect_uri=http://localhost:5173/auth/callback&state=test123&scope=openid+profile+email" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# 预期返回
+{"success":true,"redirect_url":"http://localhost:5173/auth/callback?code=xxx&state=test123"}
+```
+
+### 9. 常见问题
+
+| 问题 | 解决方案 |
+|------|----------|
+| invalid_client | 检查 oauth_clients 表中是否有该 client_id |
+| invalid_redirect_uri | 检查 redirect_uris 是否包含请求的回调地址 |
+| CORS 错误 | 检查后端 CORS 配置是否包含子系统地址 |
+| 授权页面空白 | 检查用户是否已登录主系统 |
+
+---
+
+## 八、生产环境检查清单
+
+- [ ] 修改所有默认密钥和密码
+- [ ] 启用 HTTPS
+- [ ] 配置正确的 CORS 来源
+- [ ] 设置合理的 Token 过期时间
+- [ ] 配置邮件服务（验证码功能）
+- [ ] 设置文件上传目录权限
+- [ ] 配置日志记录和监控
+- [ ] 设置数据库备份策略

@@ -108,7 +108,7 @@ const typeLabels = {
 onMounted(async () => {
   try {
     const userId = route.params.userId;
-    const res = await axios.get(`${serverBase}/users/${userId}`);
+    const res = await axios.get(`${serverBase}/api/users/${userId}`);
     if (res.data.success) {
       creator.value = res.data.data;
     }

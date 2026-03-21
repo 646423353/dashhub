@@ -154,7 +154,7 @@ const fetchLeaderboard = async (mode) => {
   
   loading.value = true;
   try {
-    const res = await axios.get(`${serverBase}/projects/leaderboard/${mode}?limit=30`);
+    const res = await axios.get(`${serverBase}/api/projects/leaderboard/${mode}?limit=30`);
     if (res.data.success) {
       lists.value[mode] = res.data.data;
     }
