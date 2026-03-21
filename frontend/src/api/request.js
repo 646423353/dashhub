@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
 
-// 创建 axios 实例
+const apiBase = import.meta.env.VITE_API_BASE || '/api';
+
 const request = axios.create({
-  baseURL: '/api',
+  baseURL: apiBase,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json'
