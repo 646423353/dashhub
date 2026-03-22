@@ -106,8 +106,21 @@ const handleLogin = async () => {
   try {
     await authStore.login(form.email, form.password);
     ElMessage.success('登录成功');
-    const redirect = route.query.redirect || '/';
-    router.push(redirect);
+    
+    const redirect = route.query.redirect;
+    if (redirect) {
+      // 解析 redirect 路径（可能包含查询参数）
+      const [path, queryString] = redirect.toString().split('?');
+      if (queryString) {
+        // 如果有查询参数，解析并跳转
+        const query = Object.fromEntries(new URLSearchParams(queryString));
+        router.push({ path, query });
+      } else {
+        router.push(path);
+      }
+    } else {
+      router.push('/');
+    }
   } catch (error) {
     ElMessage.error(error.message || '登录失败，请检查邮箱和密码');
   } finally {

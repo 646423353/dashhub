@@ -78,9 +78,18 @@ const scope = ref('');
 onMounted(() => {
   const queryParams = route.query;
   
+  // 保存参数到 ref
+  clientId.value = queryParams.client_id || '';
+  redirectUri.value = queryParams.redirect_uri || '';
+  state.value = queryParams.state || '';
+  scope.value = queryParams.scope || '';
+  clientName.value = queryParams.client_name || '商业策划机';
+  
+  // 检查是否已登录
   if (!authStore.isAuthenticated) {
+    // 构建完整的重定向路径（包含查询参数）
     const currentPath = route.path;
-    const queryString = new URLSearchParams(queryParams).toString();
+    const queryString = new URLSearchParams(queryParams as Record<string, string>).toString();
     const fullPath = queryString ? `${currentPath}?${queryString}` : currentPath;
     
     router.push({
@@ -89,12 +98,6 @@ onMounted(() => {
     });
     return;
   }
-
-  clientId.value = queryParams.client_id || '';
-  redirectUri.value = queryParams.redirect_uri || '';
-  state.value = queryParams.state || '';
-  scope.value = queryParams.scope || '';
-  clientName.value = queryParams.client_name || '商业策划机';
 });
 
 const handleAuthorize = async () => {
