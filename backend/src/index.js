@@ -66,7 +66,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/search', searchRoutes);
-app.use('/oauth', oauthRoutes);
+app.use('/api/oauth', oauthRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

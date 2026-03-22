@@ -104,7 +104,7 @@ const handleAuthorize = async () => {
     
     const token = localStorage.getItem('dashhub_token');
     
-    const response = await fetch(`/oauth/authorize?${params.toString()}`, {
+    const response = await fetch(`/api/oauth/authorize?${params.toString()}`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
