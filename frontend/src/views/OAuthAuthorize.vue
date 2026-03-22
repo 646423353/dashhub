@@ -89,7 +89,7 @@ onMounted(() => {
   if (!authStore.isAuthenticated) {
     // 构建完整的重定向路径（包含查询参数）
     const currentPath = route.path;
-    const queryString = new URLSearchParams(queryParams as Record<string, string>).toString();
+    const queryString = new URLSearchParams(queryParams).toString();
     const fullPath = queryString ? `${currentPath}?${queryString}` : currentPath;
     
     router.push({
