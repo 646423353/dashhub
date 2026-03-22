@@ -201,7 +201,7 @@ const projectStore = useProjectStore();
 const authStore = useAuthStore();
 
 // 服务器基础地址，线上通过 VITE_API_BASE 环境变量注入
-const serverBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
+const serverBase = import.meta.env.VITE_API_BASE || '';
 
 const project = ref(null);
 const loading = ref(true);

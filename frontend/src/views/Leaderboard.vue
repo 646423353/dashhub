@@ -130,7 +130,7 @@ import { Loading, User, Trophy } from '@element-plus/icons-vue';
 import axios from 'axios';
 
 const router = useRouter();
-const serverBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
+const serverBase = import.meta.env.VITE_API_BASE || '';
 
 const activeTab = ref('total');
 const loading = ref(false);

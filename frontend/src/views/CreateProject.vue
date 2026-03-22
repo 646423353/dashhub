@@ -232,7 +232,7 @@ const authStore = useAuthStore();
 const projectStore = useProjectStore();
 
 // 服务器基础地址
-const serverBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
+const serverBase = import.meta.env.VITE_API_BASE || '';
 
 const activeStep = ref(0);
 const formRef = ref(null);

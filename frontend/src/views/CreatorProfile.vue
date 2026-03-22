@@ -97,7 +97,7 @@ import axios from 'axios';
 const route = useRoute();
 const loading = ref(true);
 const creator = ref(null);
-const serverBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
+const serverBase = import.meta.env.VITE_API_BASE || '';
 
 const typeLabels = {
   brand: '品牌商',

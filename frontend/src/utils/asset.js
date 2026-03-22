@@ -2,8 +2,7 @@ export const getAssetUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http') || path.startsWith('data:') || path.startsWith('blob:')) return path;
 
-  // 开发环境变量或默认后端的完整地址
-  const serverBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
+  const serverBase = import.meta.env.VITE_API_BASE || '';
   
   // 确保 path 开头有 /
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
