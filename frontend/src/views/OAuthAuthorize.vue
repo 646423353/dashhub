@@ -76,19 +76,28 @@ const state = ref('');
 const scope = ref('');
 
 onMounted(() => {
+  const queryParams = route.query;
+  
+  // 保存参数到 ref
+  clientId.value = queryParams.client_id || '';
+  redirectUri.value = queryParams.redirect_uri || '';
+  state.value = queryParams.state || '';
+  scope.value = queryParams.scope || '';
+  clientName.value = queryParams.client_name || '商业策划机';
+  
+  // 检查是否已登录
   if (!authStore.isAuthenticated) {
+    // 构建完整的重定向路径（包含查询参数）
+    const currentPath = route.path;
+    const queryString = new URLSearchParams(queryParams).toString();
+    const fullPath = queryString ? `${currentPath}?${queryString}` : currentPath;
+    
     router.push({
       path: '/login',
-      query: { redirect: route.fullPath }
+      query: { redirect: fullPath }
     });
     return;
   }
-
-  clientId.value = route.query.client_id || '';
-  redirectUri.value = route.query.redirect_uri || '';
-  state.value = route.query.state || '';
-  scope.value = route.query.scope || '';
-  clientName.value = route.query.client_name || '商业策划机';
 });
 
 const handleAuthorize = async () => {
