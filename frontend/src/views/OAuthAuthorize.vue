@@ -94,8 +94,6 @@ onMounted(() => {
 const handleAuthorize = async () => {
   loading.value = true;
   try {
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
-    
     const params = new URLSearchParams({
       response_type: 'code',
       client_id: clientId.value,
@@ -106,7 +104,7 @@ const handleAuthorize = async () => {
     
     const token = localStorage.getItem('dashhub_token');
     
-    const response = await fetch(`${apiBaseUrl}/oauth/authorize?${params.toString()}`, {
+    const response = await fetch(`/oauth/authorize?${params.toString()}`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
